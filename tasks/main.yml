@@ -1,0 +1,16 @@
+---
+- name: Install postgresql
+  sudo: true
+  pacman: name=postgresql state=present
+
+- name: Ensure that our default postgresql data directory is present
+  sudo: true
+  file: path=/var/lib/postgres/data state=directory owner=postgres group=postgres
+
+- name: Initialize postgresql db
+  sudo: true
+  command: su - postgres -c "initdb --locale en_US.UTF-8 -D '/var/lib/postgres/data'"
+
+- name: Ensure that postgresql is running
+  sudo: true
+  service: name=postgresql state=started enabled=yes

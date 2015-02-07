@@ -6,10 +6,20 @@
 - name: Ensure that our default postgresql data directory is present
   sudo: true
   file: path=/var/lib/postgres/data state=directory owner=postgres group=postgres
+    #keepalive_timeout  0;
+    #
+- name: Check if postgresql data directory is already present
+  stat: path=/var/lib/postgres/data 
+  register: check_pg_db
+
+- name: Ensure correct ownership of directory for postgres user
+  command: sudo chown -R postgres:postgres /var/lib/postgres
+  when: check_pg_db.stat.exists == false
 
 - name: Initialize postgresql db
   sudo: true
   command: su - postgres -c "initdb --locale en_US.UTF-8 -D '/var/lib/postgres/data'"
+  when: check_pg_db.stat.exists == false
 
 - name: Ensure that postgresql is running
   sudo: true

@@ -6,8 +6,7 @@
 - name: Ensure that our default postgresql data directory is present
   sudo: true
   file: path=/var/lib/postgres/data state=directory owner=postgres group=postgres
-    #keepalive_timeout  0;
-    #
+
 - name: Check if postgresql data directory is already present
   stat: path=/var/lib/postgres/data 
   register: check_pg_db
